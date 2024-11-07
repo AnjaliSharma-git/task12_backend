@@ -5,8 +5,7 @@ const crypto = require('crypto');
 const { sendPasswordResetEmail } = require('../utils/email'); 
 const router = express.Router();
 
-
-router.post('/api/forgot-password', async (req, res) => {
+router.post('/forgot-password', async (req, res) => {
     const { email } = req.body;
     try {
         const user = await User.findOne({ email });
@@ -15,7 +14,7 @@ router.post('/api/forgot-password', async (req, res) => {
         }
         const token = crypto.randomBytes(20).toString('hex');
         user.resetPasswordToken = token;
-        user.resetPasswordExpires = Date.now() + 3600000;
+        user.resetPasswordExpires = Date.now() + 3600000; // 1 hour expiration
         await user.save();
         await sendPasswordResetEmail(email, token);
         res.status(200).json({ message: 'Password reset link sent to email' });
@@ -25,13 +24,13 @@ router.post('/api/forgot-password', async (req, res) => {
     }
 });
 
-router.post('/api/reset-password/:token', async (req, res) => {
+router.post('/reset-password/:token', async (req, res) => {
     const { token } = req.params;
     const { password } = req.body;
     try {
         const user = await User.findOne({
             resetPasswordToken: token,
-            resetPasswordExpires: { $gt: Date.now() } 
+            resetPasswordExpires: { $gt: Date.now() } // Check if the token is expired
         });
         if (!user) {
             return res.status(400).json({ message: 'Invalid or expired token' });
