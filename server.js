@@ -9,7 +9,7 @@ const cors = require('cors');
 app.use(cors({
     origin: 'https://anjali-password-reset.netlify.app',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials: true
+    allowedHeaders: ['Content-Type'],
 }));
 
 app.use(bodyParser.json());
