@@ -5,7 +5,7 @@ const crypto = require('crypto');
 const { sendPasswordResetEmail } = require('../utils/email'); 
 const router = express.Router();
 
-router.post('/register', async (req, res) => {
+router.post('/api/register', async (req, res) => {
     const { email, password } = req.body;
     try {
         const existingUser = await User.findOne({ email });
@@ -25,7 +25,7 @@ router.post('/register', async (req, res) => {
     }
 });
 
-router.post('/forgot-password', async (req, res) => {
+router.post('/api/forgot-password', async (req, res) => {
     const { email } = req.body;
     try {
         const user = await User.findOne({ email });
@@ -44,7 +44,7 @@ router.post('/forgot-password', async (req, res) => {
     }
 });
 
-router.post('/reset-password/:token', async (req, res) => {
+router.post('/api/reset-password/:token', async (req, res) => {
     const { token } = req.params;
     const { password } = req.body;
     try {
